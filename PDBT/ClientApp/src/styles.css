@@ -1,16 +1,109 @@
 /* You can add global styles to this file, and also import other style files */
+@import url(https://fonts.googleapis.com/css?family=Work+Sans|Noto+Sans+Wancho);
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@500&display=swap');
 
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
+:root {
+  --header-hight: 60px;
 }
 
-code {
-  color: #e01a76;
+body {
+  background-color: #e0e7f0;
+  font-family: 'Noto Sans Wancho';
+  padding: 0px;
+  margin: 0px;
+  height: 100vh;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+.header-container {
+  display: flex;
+  align-items: center;
+  height: var(--header-hight);
+  background-color:  white;
+  box-shadow: 0px 2px 20px #d5d7da;
+  z-index: 999;
+  position: fixed;
+  top: 0px;
+  bottom: var(--header-hight);
+  right: 0px;
+  left: 0px;
+  width: 100%;
 }
+
+.header-container > * {
+  margin-right: 20px;
+}
+
+h1 {
+  margin: 0px;
+}
+
+.header-button {
+  margin: 0px;
+  padding: 0px;
+  border: 0px;
+  background-color: white;
+  font-size: 25px;
+
+}
+
+.header-spacer {
+  display: flex;
+  width:max-content;
+
+  flex-grow: 10;
+}
+
+.notification-button {
+  display: block;
+  margin-left: auto;
+}
+
+.user-profile {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+}
+
+
+
+.sidebar {
+  display: flex;
+  height: 100vh;
+  background-color: rgb(251, 254, 255);
+  box-shadow: 2px 0px 20px #d5d7da;
+  transition-property: width;
+  transition-duration: 0.35s;
+  transition-timing-function: ease-out;
+  z-index: 998;
+  position: fixed;
+  top: var(--header-hight);
+  bottom: 0px;
+  width: 0px;
+}
+
+.collapse {
+  width: 0px;
+}
+
+/* .show {
+    width: 330px;
+} */
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login {
+  background-color: white;
+  width: 400px;
+  height: 500px;
+
+}
+
+.spacer {
+  flex-grow: initial;
+}
+
