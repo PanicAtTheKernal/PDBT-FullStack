@@ -1,5 +1,5 @@
 .login-container .header {
-  font-family: 'Ubuntu';
+  font-family: 'Ubuntu', serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,14 +25,22 @@
   width: 400px;
   height: fit-content;
   box-shadow: var(--shadow);
-  padding: 0 55px;
   border-radius: 10px;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding: 30px 55px;
+}
+
+@media screen and (max-width: 500px) {
+  .login {
+    width: 100vw;
+    border-radius: 0;
+  }
+
+  .login-container {
+    padding: 0;
+  }
 }
 
 .login-container label {
-  font-weight: bold;
   margin: 5px 0 0;
   padding: 0;
 }
