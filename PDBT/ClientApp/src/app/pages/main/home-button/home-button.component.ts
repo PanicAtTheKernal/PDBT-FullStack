@@ -6,8 +6,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home-button.component.css']
 })
 export class HomeButtonComponent implements OnInit {
+  hideTitle: boolean = true;
+  private readonly THRESHOLD: number = 500;
 
-  constructor() { }
+  constructor() {
+    window.addEventListener('resize', () => {
+      this.hideTitle = window.innerWidth > this.THRESHOLD;
+    })
+  }
 
   ngOnInit(): void {
   }
