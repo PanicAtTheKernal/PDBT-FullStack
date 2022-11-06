@@ -1,0 +1,27 @@
+.home-container {
+    max-height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: auto;
+    text-align: center;
+    margin: auto 5px;
+}
+
+.home-container > div {
+    display: flex;
+    justify-content: center;
+    padding: auto;
+}
+
+.home-container > div > h1 {
+    margin: auto;
+    margin-left: 6px;
+    font-size: 35px;
+    font-family: 'Ubuntu';
+}
+
+.home-container > div > img {
+    width: 50px;
+    height: 50px;
+}

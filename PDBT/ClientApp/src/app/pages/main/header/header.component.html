@@ -1,0 +1,12 @@
+<div class="header-container">
+    <app-home-button></app-home-button>
+    <fa-icon
+        class="header-button" 
+        style="display: flex; align-items: center;"
+        (click)="onSideBarClicked()"
+        [icon]="faBars"
+        >
+    </fa-icon>
+    <app-notification class="notification-button" ></app-notification>
+    <app-userprofile></app-userprofile>
+</div>

@@ -1,0 +1,91 @@
+.login-container .header {
+  font-family: 'Ubuntu';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding: 0;
+}
+
+.header img {
+  width: 50px;
+  height: 50px;
+  margin-right: 6px;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login {
+  background-color: white;
+  width: 400px;
+  height: fit-content;
+  box-shadow: var(--shadow);
+  padding: 0 55px;
+  border-radius: 10px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.login-container label {
+  font-weight: bold;
+  margin: 5px 0 0;
+  padding: 0;
+}
+
+.login-container .text-field input {
+  margin-top: 1px;
+  margin-bottom: 15px;
+}
+
+.login-container .text-field input:hover {
+  margin-top: 1px;
+  margin-bottom: 14px;
+}
+
+.login-container .text-field input:focus {
+  margin-top: 1px;
+  margin-bottom: 14px;
+}
+
+.login-container .email {
+  position: relative;
+  width: 100%;
+  display: flex;
+}
+
+.login-container input {
+  margin: 5px 0;
+  padding: 0;
+  z-index: 0;
+}
+
+.remember-me {
+  display: flex;
+  position: relative;
+  cursor: pointer;
+}
+
+.remember-me label {
+  width: fit-content;
+  margin: auto 0;
+}
+
+.remember-me input {
+  margin: auto 5px auto auto;
+
+}
+
+.submit-button input{
+  margin-top: 15px;
+  padding: 0 10px 7px;
+  text-align: center;
+  vertical-align: center;
+  border-radius: 3px;
+}
+
+

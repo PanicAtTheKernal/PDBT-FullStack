@@ -4,11 +4,15 @@
 
 :root {
   --header-hight: 60px;
+  --font-size: 17px;
+  --checkbox-size: 18px;
+  --shadow: 0px 2px 20px #d5d7da;
 }
 
 body {
   background-color: #e0e7f0;
-  font-family: 'Noto Sans Wancho';
+  font-family: 'Noto Sans Wancho', serif;
+  font-size: var(--font-size);
   padding: 0px;
   margin: 0px;
   height: 100vh;
@@ -19,7 +23,7 @@ body {
   align-items: center;
   height: var(--header-hight);
   background-color:  white;
-  box-shadow: 0px 2px 20px #d5d7da;
+  box-shadow: var(--shadow);
   z-index: 999;
   position: fixed;
   top: 0px;
@@ -70,7 +74,7 @@ h1 {
   display: flex;
   height: 100vh;
   background-color: rgb(251, 254, 255);
-  box-shadow: 2px 0px 20px #d5d7da;
+  box-shadow: var(--shadow);
   transition-property: width;
   transition-duration: 0.35s;
   transition-timing-function: ease-out;
@@ -89,21 +93,72 @@ h1 {
     width: 330px;
 } */
 
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.login {
-  background-color: white;
-  width: 400px;
-  height: 500px;
-
-}
-
 .spacer {
   flex-grow: initial;
 }
+
+input[type=text],
+input[type=email],
+input[type=password]
+{
+  border: 0;
+  border-bottom: 1px solid black;
+  font-size: calc(  var(--font-size) - 2px);
+  padding: 0;
+  margin: 5px 0;
+}
+
+input[type=text]:focus,
+input[type=email]:focus,
+input[type=password]:focus
+{
+  outline: 0;
+  border: 0;
+  border-bottom: 2px solid var(--bs-blue);
+  padding: 0;
+  margin-bottom: 4px;
+}
+
+input[type=text]:hover,
+input[type=email]:hover,
+input[type=password]:hover
+{
+  border: 0;
+  border-bottom: 2px solid var(--bs-blue);
+  padding: 0;
+  margin-bottom: 4px;
+}
+
+input[type=checkbox] {
+  visibility: visible;
+  display: inline-block;
+  /*If don't f****** set the appearance to none then it will apply the default styling */
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid black;
+  border-radius: 3px;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+}
+
+input[type=checkbox]:checked{
+  background-image: url("/assets/check-solid.svg");
+  background-color: var(--bs-blue);
+  border: 1px solid var(--bs-blue);
+  outline: 0;
+}
+
+input[type=checkbox]:hover{
+  background-color: var(--bs-blue);
+  border: 1px solid var(--bs-blue);
+  outline: 0;
+}
+
+input[type=checkbox] + label{
+  border: 0;
+  outline: 0;
+  background-color: green;
+}
+
 

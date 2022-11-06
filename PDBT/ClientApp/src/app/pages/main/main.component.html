@@ -1,0 +1,9 @@
+<div class="main-page">
+    <app-header 
+        (sidebarbtn)="onSideBarToggle()"
+        [attr.aria-expanded]="!isCollapsed"
+		aria-controls="collapseExample"
+        >
+    </app-header>
+    <app-sidebar [collapseState]="isCollapsed"></app-sidebar>
+</div>
