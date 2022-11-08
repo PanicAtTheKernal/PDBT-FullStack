@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
+import {LoginInterface} from "../../services/loginInterface";
+
 
 @Component({
   selector: 'app-login',
@@ -7,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  constructor() { }
+  constructor(@Inject('LoginInterface') private login:LoginInterface) {
+    login.printHello();
+  }
 
   ngOnInit(): void {
   }
+
 
 }

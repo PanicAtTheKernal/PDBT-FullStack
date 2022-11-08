@@ -17,6 +17,7 @@ import { UserprofileComponent } from './pages/main/userprofile/userprofile.compo
 import { LoginComponent } from './pages/login/login.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {LoginService} from "./services/login.service";
 
 
 @NgModule({
@@ -41,7 +42,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FontAwesomeModule,
     NgbModule
   ],
-  providers: [],
+  providers: [{provide: 'LoginInterface', useClass: LoginService}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
