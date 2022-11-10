@@ -6,19 +6,19 @@
               <h1>Bug Tracker</h1>
             </div>
           </div>
-          <form class="add-form row align-items-center">
+          <form class="add-form row align-items-center" (ngSubmit)="submit()">
               <div class="col justify-content-center align-items-center">
                   <div class="row text-field">
                     <label for="text">Email:</label>
-                    <input type="email" name="text" id="text" class="email" placeholder="Email"/>
+                    <input type="email" name="text" id="text" class="email" placeholder="Email" [(ngModel)]="email"/>
                   </div>
                   <div class="row text-field">
                     <label for="day">Password:</label>
-                    <input type="password" name="day" id="day" placeholder="Password"/>
+                    <input type="password" name="day" id="day" placeholder="Password" [(ngModel)]="password"/>
                   </div>
                   <div class="row remember-me">
                     <label for="remember">Remember me:</label>
-                    <input type="checkbox" name="remember" id="remember">
+                    <input type="checkbox" name="remember" id="remember" [(ngModel)]="rememberMe">
                   </div>
                   <div class="row submit-button justify-content-center">
                     <input type="submit" value="Login" class="btn-primary">

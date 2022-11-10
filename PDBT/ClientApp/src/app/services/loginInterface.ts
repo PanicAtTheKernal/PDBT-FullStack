@@ -1,4 +1,7 @@
+import {Login} from "../models/login";
+import {Observable} from "rxjs";
+import {LoginResponse} from "../models/login-response";
+
 export interface LoginInterface {
-  printHello(): void
-  login(): void
+  login(loginData: Login): void
 }
