@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  pdbt_completestack:
+    build:
+      context: .
+    environment:
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=test
+    ports:
+      - "8080:9000"
+      - "8081:9001"
+    links:
+      - "database:database"
+    depends_on:
+      - database
+
+  database:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: btuser
+      MYSQL_PASSWORD: 1qaz2wsx
+      MYSQL_DATABASE: bugtracker
+    volumes:
+        - ./sqlscripts/:/docker-entrypoint-initdb.d/
+    ports:
+      - "3306:3306"

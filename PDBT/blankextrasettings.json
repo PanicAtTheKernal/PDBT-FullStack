@@ -1,0 +1,4 @@
+{
+    "ConnectionStrings:PDBT": "server=<ip linked in the docker compose file>;user=<username>;password=<password>;database=<database name>",
+    "jwttoken:key": "<Insert a random string in here>"
+}

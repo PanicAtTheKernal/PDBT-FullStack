@@ -232,3 +232,6 @@ _Pvt_Extensions
 
 # Config 
 extrasettings.json
+
+ClientApp/.angular/
+Migrations/

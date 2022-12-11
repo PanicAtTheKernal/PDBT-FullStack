@@ -21,6 +21,21 @@ builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericReposi
 builder.Services.AddTransient<IIssueRepository, IssueRepository>();
 builder.Services.AddTransient<ILabelRepository, LabelRepository>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+#endregion
+
+#region Configuration
+var extraConfig = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("extrasettings.json", true)
+    .AddEnvironmentVariables()
+    .Build();
+
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("extrasettings.json", true)
+    .AddEnvironmentVariables()
+    .Build();
 #endregion
 
 #region Controllers
@@ -31,7 +46,7 @@ builder.Services.AddControllersWithViews();
 
 #region Database context
 builder.Services.AddDbContext<PdbtContext>(opt => opt
-    .UseMySql(builder.Configuration.GetConnectionString("PDBT"), serverVersion)
+    .UseMySql(extraConfig.GetSection("ConnectionStrings:PDBT").Value, serverVersion)
     .UseValidationCheckConstraints()
     .UseEnumCheckConstraints()
     .LogTo(Console.WriteLine, LogLevel.Information)
@@ -55,7 +70,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(builder.Configuration.GetSection("jwttoken:key").Value)),
+                .GetBytes(extraConfig.GetSection("jwttoken:key").Value)),
             ValidateIssuer = false,
             ValidateAudience = false
         };
