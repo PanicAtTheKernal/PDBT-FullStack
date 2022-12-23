@@ -1,0 +1,4 @@
+{
+    "ConnectionStrings:PDBT": "server=localhost;user=btuser;password=password;database=bugtracker",
+    "jwttoken:key": "<Insert a random string (64 chars min) in here>"
+}
