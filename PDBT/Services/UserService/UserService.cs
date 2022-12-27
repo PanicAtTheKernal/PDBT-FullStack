@@ -228,7 +228,7 @@ public class UserService: IUserService
     {
         List<Claim> claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.Name, user.Id.ToString())
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
         };
         
         var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using PDBT_CompleteStack.Models;
 using PDBT_CompleteStack.Repository.Interfaces;
@@ -28,15 +29,18 @@ public class ProjectService: IProjectService
 
     public async Task<bool> UserBelongInProject(Project project)
     {
-        var userId = _httpContextAccessor.HttpContext?.User.Identity?.Name;    
+        // Retrieve the user id that was just used for login
+        var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier).ToString();    
         
         if (userId != null)
         {
             var authUserId = Int32.Parse(userId);
-            var authUser = await _context.Users.GetByIdAsync(authUserId);
 
-            if (project.Users.Contains(authUser))
+            // If the currently signed user is present in the project assigned users 
+            if (project.Users.Any(user => user.Id == authUserId))
+            {
                 return true;
+            }
         }
         return false;
     }
