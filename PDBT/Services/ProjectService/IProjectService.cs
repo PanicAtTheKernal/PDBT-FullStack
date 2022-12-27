@@ -11,5 +11,5 @@ public interface IProjectService
     Task<ServiceResponse<Project>> AddProject(Project project);
     Task<ServiceResponse<Project>> AddProject(ProjectDTO project);
     Task<ServiceResponse<Issue>> DeleteIssue(int id, int projectId);
-    Task<ServiceResponse<bool>> ValidateUserAndProjectId(int projectId);
+    Task<ServiceResponse<ActionResult>> ValidateUserAndProjectId(int projectId);
 }

@@ -26,8 +26,17 @@ public class ProjectService: IProjectService
 
     public async Task<ServiceResponse<Project>> GetProjectById(int projectId)
     {
-        var project = await _context.Projects.GetByIdAsync(projectId);
         var response = new ServiceResponse<Project>();
+        
+        var verify = await ValidateUserAndProjectId(projectId);
+        if (!verify.Success)
+        {
+            response.Success = verify.Success;
+            response.Result = verify.Data!;
+            return response;
+        }
+        
+        var project = await _context.Projects.GetByIdAsync(projectId);
 
         if (project == null)
         {
@@ -83,23 +92,21 @@ public class ProjectService: IProjectService
         throw new NotImplementedException();
     }
 
-    public async Task<ServiceResponse<bool>> ValidateUserAndProjectId(int projectId)
+    public async Task<ServiceResponse<ActionResult>> ValidateUserAndProjectId(int projectId)
     {
-        var response = new ServiceResponse<bool>();
+        var response = new ServiceResponse<ActionResult>();
 
         if (!await ProjectExist(projectId))
         {
             response.Success = false;
-            response.Data = false;
-            response.Result = new NotFoundObjectResult("Project Does not exist");
+            response.Data = new NotFoundObjectResult("Project Does not exist");
             return response;
         }
 
         if (!await UserBelongInProject(projectId))
         {
             response.Success = false;
-            response.Data = false;
-            response.Result = new ForbidResult();
+            response.Data = new ForbidResult();
             return response;
         }
 
