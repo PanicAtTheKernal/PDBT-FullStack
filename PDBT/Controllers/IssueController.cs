@@ -28,8 +28,8 @@ namespace PDBT_CompleteStack.Controllers
         public async Task<ActionResult<IEnumerable<Issue>>> GetIssues(int projectId)
         {
             // Returns 404 or 400 depending on the problem
-            var response = await _projectService.ValidateUserAndProjectId(projectId);
-            if (!response.Success) return response.Data!;
+            /*var response = await _projectService.ValidateUserAndProjectId(projectId);
+            if (!response.Success) return response.Data!;*/
 
             var issuesResponse = await _issueService.GetAllIssue(projectId);
 
@@ -41,8 +41,8 @@ namespace PDBT_CompleteStack.Controllers
         public async Task<ActionResult<Issue>> GetIssue(int id, int projectId)
         {
             // Returns 404 or 400 depending on the problem
-            var response = await _projectService.ValidateUserAndProjectId(projectId);
-            if (!response.Success) return response.Data!;
+            /*var response = await _projectService.ValidateUserAndProjectId(projectId);
+            if (!response.Success) return response.Data!;*/
             
             var issueResponse = await _issueService.GetIssueById(id, projectId);
 
@@ -55,8 +55,8 @@ namespace PDBT_CompleteStack.Controllers
         public async Task<ActionResult<Issue>> PutIssue(int id, IssueDTO issueDto, int projectId)
         {
             // Returns 404 or 400 depending on the problem
-            var response = await _projectService.ValidateUserAndProjectId(projectId);
-            if (!response.Success) return response.Data!;
+            /*var response = await _projectService.ValidateUserAndProjectId(projectId);
+            if (!response.Success) return response.Result;*/
 
             var issueResponse = await _issueService.ConvertDto(id, issueDto, projectId);
             if (!issueResponse.Success) return issueResponse.Result;
@@ -75,8 +75,8 @@ namespace PDBT_CompleteStack.Controllers
         public async Task<ActionResult<Issue>> PostIssue(IssueDTO issueDto, int projectId)
         {
             // Returns 404 or 400 depending on the problem
-            var response = await _projectService.ValidateUserAndProjectId(projectId);
-            if (!response.Success) return response.Data!;
+            /*var response = await _projectService.ValidateUserAndProjectId(projectId);
+            if (!response.Success) return response.Data!;*/
 
             var issueResponse = await _issueService.ConvertDto(issueDto.Id, issueDto, projectId);
             if (!issueResponse.Success) return issueResponse.Result;
@@ -86,8 +86,8 @@ namespace PDBT_CompleteStack.Controllers
             if (issueDto.Labels != null)
                 issueResponse = await _labelService.UpdateLabelsInIssue(issueResponse.Data!, issueDto.Labels);
 
-            issueResponse = await _projectService.InsertIssueIntoProject(issueResponse.Data!, projectId);
-            await _issueService.SaveChanges(issueResponse.Data!.Id);
+            /*issueResponse = await _projectService.InsertIssueIntoProject(issueResponse.Data!, projectId);
+            await _issueService.SaveChanges(issueResponse.Data!.Id);*/
             
             return issueResponse.Data;
         }
@@ -97,8 +97,8 @@ namespace PDBT_CompleteStack.Controllers
         public async Task<ActionResult<Issue>> DeleteIssue(int id, int projectId)
         {
             // Returns 404 or 400 depending on the problem
-            var response = await _projectService.ValidateUserAndProjectId(projectId);
-            if (!response.Success) return response.Data!;
+            /*var response = await _projectService.ValidateUserAndProjectId(projectId);
+            if (!response.Success) return response.Data!;*/
 
             var results = await _issueService.DeleteIssue(id, projectId);
             return results.Result;

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PDBT_CompleteStack.Models;
 using PDBT_CompleteStack.Repository.Interfaces;
+using PDBT_CompleteStack.Services.ProjectService;
 
 namespace PDBT_CompleteStack.Controllers
 {
@@ -10,25 +11,25 @@ namespace PDBT_CompleteStack.Controllers
     [ApiController, Authorize]
     public class ProjectController : ControllerBase
     {
-        private readonly IUnitOfWork _context;
+        private readonly IProjectService _projectService;
 
-        public ProjectController(IUnitOfWork context)
+        public ProjectController(IProjectService projectService)
         {
-            _context = context;
+            _projectService = projectService;
         }
 
         // GET: api/Project
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
-
+            return null;
         }
 
         // GET: api/Project/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Project>> GetProject(int id)
         {
-
+            return null;
         }
 
         // PUT: api/Project/5
@@ -36,7 +37,7 @@ namespace PDBT_CompleteStack.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProject(int id, ProjectDTO projectDto)
         {
-
+            return null;
         }
 
         // POST: api/Project
@@ -44,37 +45,17 @@ namespace PDBT_CompleteStack.Controllers
         [HttpPost]
         public async Task<ActionResult<Project>> PostProject(ProjectDTO projectDto)
         {
-
+            var results = await _projectService.AddProject(projectDto);
+            
+            return results.Result;
         }
 
         // DELETE: api/Project/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProject(int id)
         {
-
+            return null;
         }
 
-        private Project DtoToProject(ProjectDTO projectDto) =>
-            new Project()
-            {
-                Id = projectDto.Id,
-                Name = projectDto.Name,
-                Description = projectDto.Description
-            };
-
-        private async Task<bool> verifyUser(Project project)
-        {
-            if (User?.Identity?.Name != null)
-            {
-                var authUserId = Int32.Parse(User.Identity.Name);
-                var authUser = await _context.Users.GetByIdAsync(authUserId);
-
-                if (project.Users.Contains(authUser))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 }
