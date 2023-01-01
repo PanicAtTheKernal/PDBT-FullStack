@@ -22,7 +22,8 @@ namespace PDBT_CompleteStack.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Project>>> GetProjects()
         {
-            return null;
+            var results = await _projectService.GetAllProjects();
+            return results.Result;
         }
 
         // GET: api/Project/5

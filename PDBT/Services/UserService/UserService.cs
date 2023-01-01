@@ -96,7 +96,7 @@ public class UserService: IUserService
         };
 
         response.Data = result;
-        response.Result = new OkResult();
+        response.Result = new OkObjectResult(result);
         
         return response;
     }

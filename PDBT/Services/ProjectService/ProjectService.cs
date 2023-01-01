@@ -19,15 +19,30 @@ public class ProjectService: IProjectService
         _userService = userService;
     }
 
-    public Task<ServiceResponse<IEnumerable<Project>>> GetAllProjects()
+    public async Task<ServiceResponse<IEnumerable<Project>>> GetAllProjects()
     {
-        throw new NotImplementedException();
+        var allprojects = await _context.Projects.GetAllAsync();
+        var projectsWithUser = allprojects.Where(UserBelongInProject).ToList();
+        var response = new ServiceResponse<IEnumerable<Project>>();
+        
+        if (!projectsWithUser.Any())
+        {
+            response.Success = false;
+            response.Result = new NotFoundResult();
+            return response;
+        }
+        
+        response.Data = projectsWithUser;
+        response.Result = new OkObjectResult(response.Data);
+        
+        return response;
     }
 
     public async Task<ServiceResponse<Project>> GetProjectById(int projectId)
     {
         var response = new ServiceResponse<Project>();
         
+        // Verfiy if the project exists and if the user has access to it
         var verify = await ValidateUserAndProjectId(projectId);
         if (!verify.Success)
         {
@@ -38,19 +53,12 @@ public class ProjectService: IProjectService
         
         var project = await _context.Projects.GetByIdAsync(projectId);
 
-        if (project == null)
-        {
-            response.Success = false;
-            response.Result = new NotFoundResult();
-            return response;
-        }
-
         response.Data = project;
         response.Result = new OkObjectResult(project);
         return response;
     }
 
-    public Task<ServiceResponse<Issue>> UpdateIssue(Issue issue)
+    public Task<ServiceResponse<Issue>> UpdateProject(Issue issue)
     {
         throw new NotImplementedException();
     }
@@ -87,7 +95,7 @@ public class ProjectService: IProjectService
     
 
 
-    public Task<ServiceResponse<Issue>> DeleteIssue(int id, int projectId)
+    public Task<ServiceResponse<Issue>> DeleteProject(int id, int projectId)
     {
         throw new NotImplementedException();
     }
@@ -103,7 +111,7 @@ public class ProjectService: IProjectService
             return response;
         }
 
-        if (!await UserBelongInProject(projectId))
+        if (!await UserBelongInProjectAsync(projectId))
         {
             response.Success = false;
             response.Data = new ForbidResult();
@@ -119,13 +127,13 @@ public class ProjectService: IProjectService
         return (await _context.Projects.GetAllAsync()).Any(e => e.Id == projectId);
     }
 
-    private async Task<bool> UserBelongInProject(int projectId)
+    private async Task<bool> UserBelongInProjectAsync(int projectId)
     {
         var project = await _context.Projects.GetByIdAsync(projectId);
-        return await UserBelongInProject(project);
+        return UserBelongInProject(project);
     }
 
-    private async Task<bool> UserBelongInProject(Project project)
+    private bool UserBelongInProject(Project project)
     {
         // Retrieve the user id that was just used for login
         var userId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);    
