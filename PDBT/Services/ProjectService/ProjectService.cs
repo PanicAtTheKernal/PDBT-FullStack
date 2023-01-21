@@ -37,25 +37,17 @@ public class ProjectService: IProjectService
         
         return response;
     }
-
-    public async Task<ServiceResponse<Project>> GetProjectById(int projectId)
+    
+    public async Task<Project?> GetProjectById(int projectId)
     {
-        var response = new ServiceResponse<Project>();
-        
-        // Verfiy if the project exists and if the user has access to it
+        // Verify if the project exists and if the user has access to it
         var verify = await ValidateUserAndProjectId(projectId);
-        if (!verify.Success)
-        {
-            response.Success = verify.Success;
-            response.Result = verify.Data!;
-            return response;
-        }
-        
-        var project = await _context.Projects.GetByIdAsync(projectId);
+        if (!verify)
+            return null;
 
-        response.Data = project;
-        response.Result = new OkObjectResult(project);
-        return response;
+        var project = await _context.Projects.GetByIdAsync(projectId);
+        
+        return project;
     }
 
     public Task<ServiceResponse<Issue>> UpdateProject(Issue issue)
@@ -100,26 +92,34 @@ public class ProjectService: IProjectService
         throw new NotImplementedException();
     }
 
-    public async Task<ServiceResponse<ActionResult>> ValidateUserAndProjectId(int projectId)
+    public async void AddIssueToProject(Issue issue)
     {
-        var response = new ServiceResponse<ActionResult>();
+        var project = await GetProjectById(issue.RootProjectID);
+
+        if (project is null)
+        {
+            // If this exception is thrown then the id of the project listed in the issue is incorrect. This could mean 
+            // that there is an error in ValidateUserAndProjectId or an error in the insertion of the issue 
+            throw new NullReferenceException();
+        }
+        
+        project.Issues.Add(issue);
+    }
+
+    public async Task<bool> ValidateUserAndProjectId(int projectId)
+    {
 
         if (!await ProjectExist(projectId))
         {
-            response.Success = false;
-            response.Data = new NotFoundObjectResult("Project Does not exist");
-            return response;
+            return false;
         }
 
         if (!await UserBelongInProjectAsync(projectId))
         {
-            response.Success = false;
-            response.Data = new ForbidResult();
-            return response;
+            return false;
         }
 
-        response.Success = true;
-        return response;
+        return true;
     }
     
     private async Task<bool> ProjectExist(int projectId)

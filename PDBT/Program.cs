@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PDBT_CompleteStack.Data;
+using PDBT_CompleteStack.Managers;
 using PDBT_CompleteStack.Repository.Classes;
 using PDBT_CompleteStack.Repository.Interfaces;
 using PDBT_CompleteStack.Services.IssueService;
@@ -59,6 +60,7 @@ builder.Services.AddScoped<IIssueService, IssueService>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<ILabelService, LabelService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IIssueManager, IssueManager>();
 builder.Services.AddHttpContextAccessor();
 #endregion
 

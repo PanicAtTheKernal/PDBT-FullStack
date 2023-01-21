@@ -30,8 +30,10 @@ namespace PDBT_CompleteStack.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Project>> GetProject(int id)
         {
-            var results = await _projectService.GetProjectById(id);
-            return results.Result;
+            var result = await _projectService.GetProjectById(id);
+            if (result is not null)
+                return NotFound();
+            return new OkObjectResult(result);
         }
 
         // PUT: api/Project/5

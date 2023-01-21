@@ -2,16 +2,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PDBT_CompleteStack.Models;
 using PDBT_CompleteStack.Repository.Interfaces;
+using PDBT_CompleteStack.Services.LabelService;
+using PDBT_CompleteStack.Services.ProjectService;
 
 namespace PDBT_CompleteStack.Services.IssueService;
 
 public class IssueService : IIssueService
 {
     private readonly IUnitOfWork _context;
-
-    public IssueService(IUnitOfWork context)
+    private readonly ILabelService _labelService;
+    private readonly IProjectService _projectService;
+    
+    public IssueService(IUnitOfWork context, ILabelService labelService, IProjectService projectService)
     {
         _context = context;
+        _labelService = labelService;
     }
 
     public async Task<ServiceResponse<IEnumerable<Issue>>> GetAllIssue(int projectId)
@@ -86,29 +91,26 @@ public class IssueService : IIssueService
 
         return response;
     }
-
-    public async Task<ServiceResponse<Issue>> UpdateIssue(Issue issue)
+    
+    public async Task<ServiceResponse<Issue>> UpdateIssue(IssueDTO issue)
     {
         var response = new ServiceResponse<Issue>();
-        await _context.Issues.Update(issue);
-
-        response.Data = await _context.Issues.GetByIdAsync(issue.Id);
-        response.Result = new OkObjectResult(response.Data);
+        // await _context.Issues.Update(issue);
+        //
+        // response.Data = await _context.Issues.GetByIdAsync(issue.Id);
+        // response.Result = new OkObjectResult(response.Data);
 
         return response;
     }
 
-    public async Task<ServiceResponse<Issue>> AddIssue(Issue issue)
+    public async Task<Issue> AddIssue(IssueDTO issueDto)
     {
+        var issue = DtoToIssue(issueDto);
         _context.Issues.AddAsync(issue);
-        issue.Labels = new List<Label>();
-        
-        return new ServiceResponse<Issue>
-        {
-            Data = issue,
-            Result = new OkObjectResult(issue),
-            Success = true
-        };
+
+        await _context.CompleteAsync();
+
+        return issue;
     }
 
     public async Task<ServiceResponse<Issue>> DeleteIssue(int id, int projectId)
@@ -147,6 +149,23 @@ public class IssueService : IIssueService
         };
     }
 
+    private async Task<bool> AddLabels(Issue issue, IssueDTO issueDto)
+    {
+        var response = await GetIssueById(issue.Id, issue.RootProjectID);
+        issue = response.Data;
+
+        if (issueDto.Labels is not null)
+            foreach (var label in issueDto.Labels)
+            {
+                var labelRes = await _labelService.GetLabelById(label, issue.RootProjectID);
+                if (labelRes.Data != null) issue.Labels.Add(labelRes.Data);
+            }
+
+        return true;
+    }
+    
+    
+    
     private Issue DtoToIssue(IssueDTO issueDto) =>
         new()
         {
