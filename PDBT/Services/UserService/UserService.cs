@@ -147,21 +147,29 @@ public class UserService: IUserService
         return response;
     }
 
-    public async Task<ServiceResponse<User>> GetUserById(int id)
+    public async Task<IEnumerable<User>> GetUsersByList(ICollection<int> ids, int projectId)
     {
-        var user = await _context.Users.GetByIdAsync(id);
-        var response = new ServiceResponse<User>();
+        List<User> users = new List<User>();
 
-        if (user == null)
+        foreach (var id in ids)
         {
-            response.Success = false;
-            response.Result = new NotFoundResult();
-            return response;
+            var user = await GetUserById(id);
+            
+            //If the user does not have access to the project they will not be added to the list
+            if (user != null && user.Projects.Any(x => x.Id == projectId))
+            {
+                users.Add(user);
+            }
         }
 
-        response.Data = user;
-        response.Result = new OkObjectResult(user);
-        return response;
+        return users;
+    }
+
+    public async Task<User?> GetUserById(int id)
+    {
+        var user = await _context.Users.GetByIdAsync(id);
+
+        return user;
     }
 
     // Returns true if registered

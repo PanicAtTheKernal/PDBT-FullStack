@@ -41,7 +41,13 @@ namespace PDBT_CompleteStack.Controllers
         public async Task<ActionResult<User>> GetUserById(int id)
         {
             var result = await _userService.GetUserById(id);
-            return result.Result;
+
+            if (result is null)
+            {
+                return NotFound();
+            }
+            
+            return new OkObjectResult(result);
         }
     }
 }

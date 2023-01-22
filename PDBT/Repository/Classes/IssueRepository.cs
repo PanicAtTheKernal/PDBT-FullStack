@@ -19,7 +19,7 @@ public class IssueRepository : GenericRepository<Issue>, IIssueRepository
             .FirstOrDefault()!;
     }
     
-    public override async Task<Issue> GetByIdAsync(int id)
+    public override async Task<Issue?> GetByIdAsync(int id)
     {
         return (await _context.Issues.Where(i => i.Id == id)
             .Include(i => i.Labels)

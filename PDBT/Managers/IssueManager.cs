@@ -25,15 +25,24 @@ public class IssueManager: IIssueManager
     public async Task<bool> AddIssue(IssueDTO issueDto)
     {
         if (!await _projectService.ValidateUserAndProjectId(issueDto.RootProjectID))
-        {
             return false;
+
+        var issue = await _issueService.AddIssue(issueDto);
+        
+        _projectService.AddIssueToProject(issue);
+
+        if (issueDto.Labels is not null)
+        {
+            var labels = await _labelService.GetLabelsByList(issueDto.Labels, issue.RootProjectID);
+            issue = await _issueService.AddLabelsToIssue(issue, labels.ToList());
         }
 
-        var issue = _issueService.AddIssue(issueDto);
-        
-        
-        
-        
+        if (issueDto.Assignees is not null)
+        {
+            var users = await _userService.GetUsersByList(issueDto.Assignees, issue.RootProjectID);
+            issue = await _issueService.AddUsersToIssue(issue, users.ToList());
+        }
+
         return true;
     }
 }

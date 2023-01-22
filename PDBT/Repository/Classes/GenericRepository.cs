@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using PDBT_CompleteStack.Data;
@@ -28,9 +29,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
         _context.Set<T>().Add(entity);
     }
 
-    public void AddAsync(T entity)
+    public async void AddAsync(T entity)
     {
-        _context.Set<T>().AddAsync(entity);
+        await _context.Set<T>().AddAsync(entity);
     }
     
     public void AddRange(IEnumerable<T> entities)
@@ -59,12 +60,13 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         return await _context.Set<T>().ToListAsync();
     }
-    public virtual T GetById(int id)
+    
+    public virtual T? GetById(int id)
     {
         return _context.Set<T>().Find(id)!;
     }
 
-    public virtual async Task<T> GetByIdAsync(int id)
+    public virtual async Task<T?> GetByIdAsync(int id)
     {
         return (await _context.Set<T>().FindAsync(id))!;
     }

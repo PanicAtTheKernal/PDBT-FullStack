@@ -18,46 +18,42 @@ public class LabelService : ILabelService
         throw new NotImplementedException();
     }
 
-    public async Task<ServiceResponse<Label>> GetLabelById(int id, int projectId)
+    public async Task<Label?> GetLabelById(int id, int projectId)
     {
         var label = await _context.Labels.GetByIdAsync(id);
         var response = new ServiceResponse<Label>();
 
-        if (label == null || label.RootProject.Id != projectId)
+        if (label is null)
         {
-            response.Success = false;
-            response.Result = new NotFoundResult();
-            return response;
+            return null;
+        }
+        
+        if (label.RootProject.Id != projectId)
+        {
+            return null;
+        }
+        
+        return label;
+    }
+
+    public async Task<IEnumerable<Label>> GetLabelsByList(ICollection<int> ids, int projectId)
+    {
+        List<Label> labelsResult = new List<Label>();
+
+        foreach (var id in ids)
+        {
+            var label = await GetLabelById(id, projectId);
+            if (label is not null)
+            {
+                labelsResult.Add(label);
+            }
         }
 
-        response.Data = label;
-        response.Result = new OkObjectResult(label);
-        return response;
+        return labelsResult;
     }
 
     public async Task<ServiceResponse<Label>> UpdateLabel(int id, LabelDTO labelDto, int projectId)
     {
         throw new NotImplementedException();
-    }
-
-    public async Task<ServiceResponse<Issue>> UpdateLabelsInIssue(Issue issue, ICollection<LabelDTO> labelsToInsert)
-    {
-        foreach (var labelDto in labelsToInsert)
-        {
-            var label = await GetLabelById(labelDto.Id, issue.RootProjectID);
-
-            if (label.Success)
-            {
-                if (issue.Labels.All(l => l.Id != label.Data.Id))
-                    issue.Labels.Add(label.Data);
-            }
-        }
-
-        return new ServiceResponse<Issue>()
-        {
-            Data = issue,
-            Result = new OkObjectResult(issue),
-            Success = true
-        };
     }
 }

@@ -72,7 +72,7 @@ public class ProjectService: IProjectService
         var userIdStr = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         int userId = Int32.Parse(userIdStr);
         var user = await _userService.GetUserById(userId);
-        project.Users.Add(user.Data);
+        project.Users.Add(user);
 
         await _context.CompleteAsync();
         
@@ -104,6 +104,8 @@ public class ProjectService: IProjectService
         }
         
         project.Issues.Add(issue);
+
+        await _context.CompleteAsync();
     }
 
     public async Task<bool> ValidateUserAndProjectId(int projectId)

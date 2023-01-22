@@ -39,21 +39,16 @@ public class IssueService : IIssueService
         return response;
     }
     
-    public async Task<ServiceResponse<Issue>> GetIssueById(int id, int projectId)
+    public async Task<Issue?> GetIssueById(int id, int projectId)
     {
         var issue = await _context.Issues.GetByIdAsync(id);
-        var response = new ServiceResponse<Issue>();
 
         if (issue == null || issue.RootProjectID != projectId)
         {
-            response.Success = false;
-            response.Result = new NotFoundResult();
-            return response;
+            return null;
         }
-
-        response.Data = issue;
-        response.Result = new OkObjectResult(issue);
-        return response;
+        
+        return issue;
     }
 
     public async Task<ServiceResponse<Issue>> ConvertDto(int id, IssueDTO issueDto,int projectId)
@@ -113,14 +108,14 @@ public class IssueService : IIssueService
         return issue;
     }
 
-    public async Task<ServiceResponse<Issue>> DeleteIssue(int id, int projectId)
+    public async Task<bool> DeleteIssue(int id, int projectId)
     {
         var issueToDel = await GetIssueById(id, projectId);
-        if (!issueToDel.Success) return issueToDel;
+        if (issueToDel is null) return false;
 
-        _context.Issues.Remove(issueToDel.Data);
-        await SaveChanges(issueToDel.Data.Id);
-        return issueToDel;
+        _context.Issues.Remove(issueToDel);
+        await SaveChanges(issueToDel.Id);
+        return true;
     }
 
     public async Task<ServiceResponse<Issue>> SaveChanges(int id)
@@ -149,23 +144,68 @@ public class IssueService : IIssueService
         };
     }
 
-    private async Task<bool> AddLabels(Issue issue, IssueDTO issueDto)
+    public async Task<Issue> AddLabelsToIssue(Issue issue, ICollection<Label> labels)
     {
-        var response = await GetIssueById(issue.Id, issue.RootProjectID);
-        issue = response.Data;
+        if (issue.Labels is null)
+            issue.Labels = new List<Label>();
 
-        if (issueDto.Labels is not null)
-            foreach (var label in issueDto.Labels)
+        foreach (var label in labels)
+        {
+            //Check if the label is currently not in the 
+            if (issue.Labels.All(x => x != label))
             {
-                var labelRes = await _labelService.GetLabelById(label, issue.RootProjectID);
-                if (labelRes.Data != null) issue.Labels.Add(labelRes.Data);
+                issue.Labels.Add(label);
             }
+        }
 
-        return true;
+        await _context.CompleteAsync();
+        return issue;
     }
     
+    public async Task<Issue> AddUsersToIssue(Issue issue, ICollection<User> users)
+    {
+        if (issue.Assignees is null)
+            issue.Assignees = new List<User>();
+        
+        foreach (var user in users)
+        {
+            //Check if the label is currently not in the 
+            if (issue.Assignees.All(x => x != user))
+            {
+                issue.Assignees.Add(user);
+            }
+        }
+
+        await _context.CompleteAsync();
+        return issue;
+    }
+
+    public async Task<Issue> AddIssuesToIssue(Issue issue, ICollection<Issue> linkedIssues)
+    {
+        // foreach (var linkedIssue in linkedIssues)
+        // {
+        //     if (issue.LinkedIssues.All(x => x != linkedIssue))
+        //     {
+        //         
+        //     }
+        // }
+        throw new NotImplementedException();
+    }
     
-    
+    public async Task<IEnumerable<Issue>> GetIssuesByList(ICollection<int> ids, int projectId)
+    {
+        List<Issue> linkedIssues = new List<Issue>();
+
+        foreach (var id in ids)
+        {
+            var issue = await GetIssueById(id, projectId);
+            if (issue is not null)
+                linkedIssues.Add(issue);    
+        }
+
+        return linkedIssues;
+    }
+
     private Issue DtoToIssue(IssueDTO issueDto) =>
         new()
         {

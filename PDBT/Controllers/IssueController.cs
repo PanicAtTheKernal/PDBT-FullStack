@@ -15,7 +15,7 @@ namespace PDBT_CompleteStack.Controllers
         private readonly IIssueService _issueService;
         private readonly IIssueManager _issueManager;
         
-        public IssueController(IssueService issueService, IIssueManager issueManager)
+        public IssueController(IIssueService issueService, IIssueManager issueManager)
         {
             _issueService = issueService;
             _issueManager = issueManager;
@@ -35,8 +35,8 @@ namespace PDBT_CompleteStack.Controllers
         public async Task<ActionResult<Issue>> GetIssue(int id, int projectId)
         {
             var issueResponse = await _issueService.GetIssueById(id, projectId);
-
-            return issueResponse.Result;
+            
+            return (issueResponse is null)? NotFound(): new OkObjectResult(issueResponse);
         }
 
         // PUT: api/Issue/5
@@ -66,19 +66,15 @@ namespace PDBT_CompleteStack.Controllers
         {
             var issueResponse = await _issueManager.AddIssue(issueDto);
 
-            return new OkObjectResult(issueResponse);
+            return (issueResponse)? Ok(): Forbid();
         }
 
         // DELETE: api/Issue/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Issue>> DeleteIssue(int id, int projectId)
         {
-            // Returns 404 or 400 depending on the problem
-            /*var response = await _projectService.ValidateUserAndProjectId(projectId);
-            if (!response.Success) return response.Data!;*/
-
             var results = await _issueService.DeleteIssue(id, projectId);
-            return results.Result;
+            return (results)? Ok(): NotFound();
         }
     }
 }
